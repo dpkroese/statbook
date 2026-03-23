@@ -1,0 +1,19 @@
+rm(list=ls());
+yy=rbind(c(9.2988, 9.4978, 9.7604, 10.1025),c(8.2111, 8.3387, 8.5018,  8.1942), c(9.0688, 9.1284, 9.3484,  9.5086),c(8.2552, 7.8999, 8.4859,  8.9485));
+
+n=as.numeric(length(yy)); nrow<-as.numeric(dim(yy)[1]); ncol<-as.numeric(dim(yy)[2]);
+y=matrix(as.numeric(yy),,1);
+X_1 = matrix(1,n,1);
+KM = kronecker(diag(ncol),matrix(1,nrow,1));
+X_2 = KM[1:n,0:(ncol-1)];
+X_2[(n-nrow+1):n,0:3]=-matrix(1,nrow,ncol-1);
+X=cbind(X_1,X_2);
+m = as.numeric(dim(X)[2]);
+betahat=solve(t(X)%*%(X))%*%(t(X)%*%y);
+ym=X%*%betahat;
+yk=X_1%*%mean(y);
+k=1;
+T = (n-m)/(m-k)*(norm(y-yk,"F")^2 - norm(y-ym,"F")^2)/norm(y-ym,"F")^2
+pval = 1-pf(T,m-k,n-m)
+cat("T=\n"); print(T)
+cat("pval=\n"); print(pval)
